@@ -1,0 +1,9 @@
+[submodule "Uno/libs/Arduino-Temperature-Control-Library"]
+	path = Uno/libs/Arduino-Temperature-Control-Library
+	url = https://github.com/milesburton/Arduino-Temperature-Control-Library
+[submodule "Uno/libs/LiquidCrystal_I2C"]
+	path = Uno/libs/LiquidCrystal_I2C
+	url = https://github.com/johnrickman/LiquidCrystal_I2C
+[submodule "Uno/libs/OneWire"]
+	path = Uno/libs/OneWire
+	url = https://github.com/PaulStoffregen/OneWire
