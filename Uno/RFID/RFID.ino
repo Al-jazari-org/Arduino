@@ -12,6 +12,7 @@ MFRC522::MIFARE_Key key;
 
 const uint8_t green_led = 3;
 const uint8_t yellow_led = 2;
+const uint8_t init_pin = A4;
 
 void setup() {
 	Serial.begin(9600);		// Initialize serial communications with the PC
@@ -21,6 +22,7 @@ void setup() {
 
     pinMode(green_led,OUTPUT);
     pinMode(yellow_led,OUTPUT);
+    pinMode(init_pin,INPUT_PULLUP);
 
 
 
@@ -29,6 +31,11 @@ void setup() {
     }
 
 	delay(4);				// Optional delay. Some board do need more time after init to be ready, see Readme
+
+    if(digitalRead(init_pin) == LOW){
+       init_eeprom = true;
+    }
+
     check_eeprom();
 
 
@@ -45,7 +52,7 @@ void loop() {
 		return;
 	}
 
-    if(has_name("marwan") == true){
+    if(has_name("123456") == true){
         digitalWrite(green_led,HIGH);
         delay(3000);
         digitalWrite(green_led,LOW);
