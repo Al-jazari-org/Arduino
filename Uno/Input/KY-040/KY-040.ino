@@ -6,7 +6,7 @@ const uint8_t dt_pin = 2;
 
 const uint8_t led_pin = 5;
 
-uint8_t led_brightness = 0;
+uint8_t led_brightness = 125;
 uint8_t step = 16;
 
 RotaryEncoder *encoder = NULL;
