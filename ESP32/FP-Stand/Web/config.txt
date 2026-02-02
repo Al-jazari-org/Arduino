@@ -1,0 +1,5 @@
+password=aljalj
+wifi-mode=STA
+sta-ssid=B.H4703
+sta-pass=rachid1973
+

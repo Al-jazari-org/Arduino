@@ -1,0 +1,9 @@
+{
+  "additionalFiles": "../..,../..,../../../..,../../../../..,../..,../..,../..,../..,../..,../..,../..,../..",
+  "compiler.optimization_flags": "-Os",
+  "customBuildProperties": "",
+  "fqbn": "esp32:esp32:esp32:PartitionScheme=default",
+  "hardwareFolders": "/home/marwan/.arduino15/packages",
+  "otherLibrariesFolders": "/home/marwan/Arduino/libraries",
+  "sketchLocation": "/home/marwan/Projects/Embedded/Arduino/ESP32/FP-Stand"
+}

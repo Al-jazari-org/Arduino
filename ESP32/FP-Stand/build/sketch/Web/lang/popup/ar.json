@@ -1,0 +1,9 @@
+#line 1 "/home/marwan/Projects/Embedded/Arduino/ESP32/FP-Stand/Web/lang/popup/ar.json"
+{
+    "finger_matched": "وجد تشابه بالبصمة رقم {id} بنقطة تشابه {score} ",
+    "finger_press_req": "اضغط الاصبع على الجهاز",
+    "finger_enrolled":"تم اضافة بصمة برقم {id}",
+    "finger_enroll_failed_0":"اعد ضغط الاصبع على الجهاز",
+    "finger_enroll_success_0":"الصورة الاولة نجحة. قم بضغط مجددا"
+
+}

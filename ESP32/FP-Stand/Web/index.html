@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Responsive Layout</title>
+        <style>
+        * { margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Desktop/Tablet styles - classic fixed height */
+        .top-bar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .top-bar h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .content {
+            height: calc(100vh - 60px);
+            overflow-y: auto;
+            padding: 2rem;
+            background: #f5f5f5;
+        }
+
+        .emblem-cont {
+            max-height: 64px;
+            width: fit-content;
+            position: absolute;
+            left:42%;
+        }
+
+        .emblem-cont svg {
+            max-height: 32px;
+            width: auto;
+        }
+
+        /* Mobile styles - percentage-based height */
+        @media (max-width: 768px) {
+            body {
+                height: 100vh;
+                height: 100dvh; /* Dynamic viewport height for better mobile support */
+            }
+
+            .top-bar {
+                height: 12vh;
+                height: 12dvh;
+                padding: 1rem;
+            }
+
+            .top-bar h1 {
+                font-size: 1.2rem;
+            }
+
+            .content {
+                height: 88vh;
+                height: 88dvh;
+                padding: 1rem;
+            }
+        }
+
+        /* Extra styling for demonstration */
+        .placeholder {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .device-info {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+
+        /* Popup overlay */
+        .popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .popup-overlay.active {
+            display: flex;
+        }
+
+        .popup-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: popupAppear 0.3s ease-out;
+        }
+
+        @keyframes popupAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .top-bar h1 {
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* Message popup overlay */
+        .message-popup-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .message-popup-overlay.active {
+            display: flex;
+        }
+
+        .message-popup-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: popupAppear 0.3s ease-out;
+            text-align: center;
+        }
+
+        .message-popup-content h2 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .message-popup-content button {
+            margin-top: 1rem;
+            padding: 0.75rem 2rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .message-popup-content .spinner {
+            margin-top: 1rem;
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Admin panel layout */
+        .admin-container {
+            display: flex;
+            gap: 1rem;
+            height: 100%;
+        }
+
+        .admin-container.rtl {
+            flex-direction: row-reverse;
+        }
+
+        /* Mobile layout - vertical stack */
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+
+            .admin-container.rtl {
+                flex-direction: column;
+            }
+
+            .control-panel {
+                order: -1;
+            }
+
+            .mode-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .fingerprint-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .mode-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+        }
+
+        .mode-btn {
+            padding: 1.5rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .mode-btn:hover {
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .mode-btn.active {
+            background: #e0e0e0;
+            color: #333;
+            border-color: #bbb;
+            box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.2);
+            transform: translateY(2px);
+        }
+
+        .clear-btn {
+            padding: 1.5rem;
+            border: 2px solid #e53e3e;
+            border-radius: 8px;
+            background: white;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e53e3e;
+            transition: all 0.2s;
+            grid-column: 1 / -1;
+        }
+
+        .clear-btn:hover {
+            background: #e53e3e;
+            color: white;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .info-value {
+            color: #333;
+        }
+
+        /* Mobile layout - vertical stack */
+        @media (max-width: 768px) {
+            .admin-container {
+                flex-direction: column;
+            }
+
+            .control-panel {
+                order: -1;
+            }
+
+            .mode-buttons {
+                grid-template-columns: 1fr;
+            }
+        }
+        </style>
+    </head>
+    <body>
+        <!-- Message Popup Overlay -->
+        <div id="message_popup" class="message-popup-overlay" onclick="closeMessagePopup(event)">
+            <div class="message-popup-content" onclick="event.stopPropagation()">
+                <h2 id="message_text" data-i18n="message_default">Message</h2>
+                <button id="popup_button" onclick="closeMessagePopup()" data-i18n="ok">OK</button>
+                <div id="popup_spinner" class="spinner" style="display: none; margin: 1rem auto 0;"></div>
+            </div>
+        </div>
+
+        <!-- Login Popup Overlay -->
+        <div id="login_popup" class="popup-overlay">
+            <div class="popup-content">
+                <h2 style="margin-bottom: 1rem;" data-i18n="admin_login">Admin Login</h2>
+                <form id="login_form" onsubmit="handleLogin(event)">
+                    <input
+                        type="password"
+                        id="password_input"
+                        data-i18n-placeholder="enter_password"
+                        placeholder="Enter admin password"
+                        style="width: 100%; padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; font-size: 1rem; margin-bottom: 1rem; direction: ltr;"
+                        pattern="[A-Za-z0-9!@#$%^&amp;*()_+\-=\[\]{};':&quot;\\|,.<>\/?]*"
+                        title="Only Latin characters allowed"
+                        required
+                    />
+                    <button
+                        type="submit"
+                        style="width: 100%; padding: 0.75rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; font-weight: 600;"
+                        data-i18n="login"
+                    >
+                        Login
+                    </button>
+                    <div id="error_msg" style="color: #e53e3e; margin-top: 0.5rem; display: none;"></div>
+                </form>
+                <button
+                    onclick="closePopup()"
+                    style="width: 100%; padding: 0.75rem; background: #e0e0e0; color: #333; border: none; border-radius: 4px; font-size: 1rem; cursor: pointer; margin-top: 0.5rem;"
+                    data-i18n="cancel"
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+
+        <div class="top-bar">
+            <h1 id="header_text" data-i18n="app_title">FingerPrint Reader</h1>
+            <div>
+                <select id="lang_selector" class="lang-selector" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                </select>
+                <div id="logout_btn" class="device-info" style="display: none;" onclick="handleLogout()" data-i18n="logout">Logout</div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Public Fingerprint Display -->
+            <div id="public_image_cont" class="placeholder" style="display: flex; align-items: center; justify-content: center; min-height: 300px;">
+                <p id="no_image_text" style="color: #999;" data-i18n="no_image">No fingerprint image</p>
+            </div>
+
+            <!-- Admin Panel (hidden by default) -->
+            <div id="admin_panel" style="display: none;" class="admin-container">
+                <!-- Fingerprint Display Panel -->
+                <div class="fingerprint-panel">
+                    <div id="image_cont" class="placeholder" style="flex: 1; display: flex; align-items: center; justify-content: center;">
+                    </div>
+                </div>
+
+                <!-- Control Panel -->
+                <div class="control-panel">
+                    <div class="placeholder">
+                        <h3 style="margin-bottom: 1rem;" data-i18n="mode_control">Mode Control</h3>
+                        <div class="mode-buttons">
+                            <button class="mode-btn" data-mode="CAPTURE" onclick="setMode('CAPTURE')" data-i18n="mode_capture">Capture</button>
+                            <button class="mode-btn" data-mode="MATCH" onclick="setMode('MATCH')" data-i18n="mode_match">Match</button>
+                            <button class="mode-btn" data-mode="ENROLL" onclick="setMode('ENROLL')" data-i18n="mode_enroll">Enroll</button>
+                            <button class="clear-btn" onclick="confirmClearDatabase()" data-i18n="clear_database">Clear Database</button>
+                        </div>
+                    </div>
+
+                    <div class="placeholder">
+                        <h3 style="margin-bottom: 1rem;" data-i18n="system_info">System Info</h3>
+                        <div class="info-card">
+                            <div class="info-row">
+                                <span class="info-label" data-i18n="current_mode">Current Mode:</span>
+                                <span class="info-value" id="info_mode">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label" data-i18n="template_count">Template Count:</span>
+                                <span class="info-value" id="info_count">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label" data-i18n="capacity">Capacity:</span>
+                                <span class="info-value" id="info_capacity">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label" data-i18n="baud_rate">Baud Rate:</span>
+                                <span class="info-value" id="info_baud">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+        let isAuthenticated = false;
+        let holdTimer = null;
+        let popupTimer = null;
+        let isPopupIndeterminate = false;
+        let currentLang = 'en';
+        let translations = {};
+        let popupTranslations = {};
+        const eventSource = new EventSource('/events');
+
+        // Header long press detection
+        const headerText = document.getElementById('header_text');
+
+        // Initialize languages and translations
+        async function initializeLanguages() {
+            try {
+                // Load available languages
+                const langsResp = await fetch('/langs');
+                if (langsResp.ok) {
+                    const langs = await langsResp.json();
+                    const selector = document.getElementById('lang_selector');
+                    selector.innerHTML = '<option value="en">English</option>';
+                    langs.forEach(lang => {
+                        const option = document.createElement('option');
+                        option.value = lang;
+                        option.textContent = lang.toUpperCase();
+                        selector.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to initialize languages:', error);
+            }
+        }
+
+        async function loadLanguage(lang) {
+            // English is default, no need to fetch
+            if (lang === 'en') {
+                translations = {};
+                popupTranslations = {};
+                currentLang = 'en';
+                // Restore original English text
+                restoreEnglishText();
+                applyTranslations();
+                return;
+            }
+
+            try {
+                const resp = await fetch(`/lang?lang=${lang}`);
+                if (resp.ok) {
+                    translations = await resp.json();
+                    currentLang = lang;
+
+                    // Load popup translations
+                    const popupResp = await fetch(`/lang/popup?lang=${lang}`);
+                    if (popupResp.ok) {
+                        popupTranslations = await popupResp.json();
+                    }
+
+                    applyTranslations();
+                }
+            } catch (error) {
+                console.error('Failed to load language:', error);
+            }
+        }
+
+        // Store original English text
+        const originalEnglishText = {
+            'app_title': 'FingerPrint Reader',
+            'logout': 'Logout',
+            'no_image': 'No fingerprint image',
+            'mode_control': 'Mode Control',
+            'mode_capture': 'Capture',
+            'mode_match': 'Match',
+            'mode_enroll': 'Enroll',
+            'clear_database': 'Clear Database',
+            'system_info': 'System Info',
+            'current_mode': 'Current Mode:',
+            'template_count': 'Template Count:',
+            'capacity': 'Capacity:',
+            'baud_rate': 'Baud Rate:',
+            'admin_login': 'Admin Login',
+            'enter_password': 'Enter admin password',
+            'login': 'Login',
+            'cancel': 'Cancel',
+            'ok': 'OK',
+            'message_default': 'Message',
+            'please_wait': 'Please wait...',
+            'invalid_password': 'Invalid password',
+            'connection_error': 'Connection error',
+            'confirm_clear': 'Are you sure you want to clear the entire database? This cannot be undone.',
+            'clear_success': 'Database cleared successfully',
+            'clear_failed': 'Failed to clear database',
+            'confirm_cancel': 'Are you sure you want to cancel this operation?'
+        };
+
+        function restoreEnglishText() {
+            // Restore all English text from the stored originals
+            document.querySelectorAll('[data-i18n]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n');
+                if (originalEnglishText[key]) {
+                    elem.textContent = originalEnglishText[key];
+                }
+            });
+
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n-placeholder');
+                if (originalEnglishText[key]) {
+                    elem.placeholder = originalEnglishText[key];
+                }
+            });
+        }
+
+        function applyTranslations() {
+            // Apply translations to elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n');
+                if (translations[key]) {
+                    elem.textContent = translations[key];
+                } else if (currentLang === 'en') {
+                    // For English, keep the original text (already in HTML)
+                    // No need to do anything
+                }
+            });
+
+            // Apply placeholder translations
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(elem => {
+                const key = elem.getAttribute('data-i18n-placeholder');
+                if (translations[key]) {
+                    elem.placeholder = translations[key];
+                } else if (currentLang === 'en') {
+                    // For English, keep the original placeholder
+                    // No need to do anything
+                }
+            });
+
+            // Set document direction for RTL languages
+            const adminPanel = document.getElementById('admin_panel');
+            if (currentLang === 'ar') {
+                document.documentElement.dir = 'rtl';
+                adminPanel.classList.add('rtl');
+            } else {
+                document.documentElement.dir = 'ltr';
+                adminPanel.classList.remove('rtl');
+            }
+        }
+
+        function changeLanguage(lang) {
+            loadLanguage(lang);
+        }
+
+        headerText.addEventListener('mousedown', startHold);
+        headerText.addEventListener('mouseup', cancelHold);
+        headerText.addEventListener('mouseleave', cancelHold);
+        headerText.addEventListener('touchstart', startHold);
+        headerText.addEventListener('touchend', cancelHold);
+        headerText.addEventListener('touchcancel', cancelHold);
+
+        function startHold(e) {
+            e.preventDefault();
+            holdTimer = setTimeout(() => {
+                openPopup();
+            }, 2000);
+        }
+
+        function cancelHold() {
+            if (holdTimer) {
+                clearTimeout(holdTimer);
+                holdTimer = null;
+            }
+        }
+
+        function openPopup() {
+            document.getElementById('login_popup').classList.add('active');
+            document.getElementById('password_input').focus();
+        }
+
+        function closePopup() {
+            document.getElementById('login_popup').classList.remove('active');
+            document.getElementById('password_input').value = '';
+            document.getElementById('error_msg').style.display = 'none';
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+
+            const password = document.getElementById('password_input').value;
+            const errorMsg = document.getElementById('error_msg');
+
+            try {
+                const response = await fetch(`/admin/login?pwd=${password}`, {
+                    method: 'POST',
+                });
+
+                if (response.ok) {
+                    isAuthenticated = true;
+                    //sessionStorage.setItem('admin_auth', 'true');
+                    closePopup();
+                    document.getElementById('logout_btn').style.display = 'inline-block';
+                    document.getElementById('public_image_cont').style.display = 'none';
+                    document.getElementById('admin_panel').style.display = 'flex';
+                    loadAdminData();
+                    // Update image in admin container
+                    updateImageValidity();
+                } else {
+                    errorMsg.textContent = translations['invalid_password'] || 'Invalid password';
+                    errorMsg.style.display = 'block';
+                    document.getElementById('password_input').value = '';
+                }
+            } catch (error) {
+                errorMsg.textContent = translations['connection_error'] || 'Connection error';
+                errorMsg.style.display = 'block';
+            }
+        }
+
+        async function handleLogout() {
+            const response = await fetch(`/admin/logout`, {
+                method: 'POST',
+            });
+            isAuthenticated = false;
+            //sessionStorage.removeItem('admin_auth');
+            document.getElementById('logout_btn').style.display = 'none';
+            document.getElementById('public_image_cont').style.display = 'flex';
+            document.getElementById('admin_panel').style.display = 'none';
+        }
+
+        // Check authentication on page load
+        async function checkAuth() {
+            const resp = await fetch("/admin")
+            //const storedAuth = document.cookie.includes("SESSIONID=");
+            if (resp.ok) {
+                isAuthenticated = true;
+                document.getElementById('logout_btn').style.display = 'inline-block';
+                document.getElementById('public_image_cont').style.display = 'none';
+                document.getElementById('admin_panel').style.display = 'flex';
+                loadAdminData();
+                // Update image in admin container
+                updateImageValidity();
+            }
+        }
+
+        async function loadAdminData() {
+            try {
+                const resp = await fetch('/admin/data');
+                if (resp.ok) {
+                    const data = await resp.json();
+
+                    // Update info display
+                    document.getElementById('info_mode').textContent = data.Mode || '-';
+                    document.getElementById('info_count').textContent = data.Info?.['Template Count'] || '-';
+                    document.getElementById('info_capacity').textContent = data.Info?.Capacity || '-';
+                    document.getElementById('info_baud').textContent = data.Info?.Baud || '-';
+
+                    // Update active mode button
+                    document.querySelectorAll('.mode-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                        if (btn.dataset.mode === data.Mode) {
+                            btn.classList.add('active');
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to load admin data:', error);
+            }
+        }
+
+        async function setMode(mode) {
+            try {
+                const resp = await fetch(`/admin/set-mode?mode=${mode}`, {
+                    method: 'POST'
+                });
+
+                if (resp.ok) {
+                    loadAdminData();
+                } else {
+                    alert('Failed to set mode');
+                }
+            } catch (error) {
+                alert('Connection error');
+            }
+        }
+
+        async function confirmClearDatabase() {
+            const confirmMsg = translations['confirm_clear'] || 'Are you sure you want to clear the entire database? This cannot be undone.';
+            if (confirm(confirmMsg)) {
+                try {
+                    const resp = await fetch('/admin/database/clear', {
+                        method: 'POST'
+                    });
+
+                    if (resp.ok) {
+                        const successMsg = translations['clear_success'] || 'Database cleared successfully';
+                        alert(successMsg);
+                        loadAdminData();
+                    } else {
+                        const errorMsg = translations['clear_failed'] || 'Failed to clear database';
+                        alert(errorMsg);
+                    }
+                } catch (error) {
+                    const errorMsg = translations['connection_error'] || 'Connection error';
+                    alert(errorMsg);
+                }
+            }
+        }
+
+        async function updateImageValidity(){
+            const resp = await fetch('fingerprint/image');
+            if (!resp.ok) return;
+
+            const arrayBuffer = await resp.arrayBuffer();
+            const data = new Uint8Array(arrayBuffer);
+
+            // --- Parse PGM header ---
+            let offset = 0;
+
+            function readLine() {
+                let line = "";
+                while (offset < data.length) {
+                    const c = String.fromCharCode(data[offset++]);
+                    if (c === "\n") break;
+                    line += c;
+                }
+                return line.trim();
+            }
+
+            let magic = readLine(); // P5
+            if (magic !== "P5") {
+                console.error("Not a PGM P5 image");
+                return;
+            }
+
+            // Skip comment lines
+            let dimsLine = readLine();
+            while (dimsLine.startsWith("#")) dimsLine = readLine();
+
+            const [width, height] = dimsLine.split(/\s+/).map(Number);
+            const maxVal = Number(readLine());
+
+            // Remaining data is pixel bytes
+            const pixelData = data.subarray(offset);
+
+            // --- Draw to canvas ---
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            const imgData = ctx.createImageData(width, height);
+
+            for (let i = 0; i < width * height; i++) {
+                const val = pixelData[i]; // 0-255
+                imgData.data[i*4 + 0] = val;
+                imgData.data[i*4 + 1] = val;
+                imgData.data[i*4 + 2] = val;
+                imgData.data[i*4 + 3] = 255;
+            }
+
+            ctx.putImageData(imgData, 0, 0);
+
+            // --- Determine which container to use ---
+            const elem = isAuthenticated ?
+                document.getElementById('image_cont') :
+                document.getElementById('public_image_cont');
+
+            const noImageText = document.getElementById('no_image_text');
+
+            // Hide placeholder text
+            if (noImageText) {
+                noImageText.style.display = 'none';
+            }
+
+            let img = elem.querySelector('img');
+            if (!img) {
+                img = document.createElement('img');
+                elem.appendChild(img);
+            }
+            img.src = canvas.toDataURL("image/png");
+            img.width = width;
+            img.height = height;
+        };
+
+        eventSource.onmessage = (e) => {
+            const data = e.data.trim();
+
+            // Handle data changed event
+            if (data === "data changed") {
+                if (isAuthenticated) {
+                    loadAdminData();
+                }
+                return;
+            }
+
+            // Handle popup command
+            if (data.startsWith("popup ")) {
+                const content = data.substring(6);
+                const parts = content.split(' ');
+                const timeInSec = parseFloat(parts[0]);
+
+                // Parse flags
+                const hasIndeterminate = parts.includes('--indeterminate');
+                const isAdminOnly = parts.includes('--admin-only');
+
+                // Skip if admin-only and not authenticated
+                if (isAdminOnly && !isAuthenticated) {
+                    return;
+                }
+
+                showMessagePopup(timeInSec, hasIndeterminate);
+                return;
+            }
+
+            // Handle popup_done command
+            if (data === "popup_done") {
+                closeMessagePopup();
+                return;
+            }
+
+            // Handle message command - only update if popup is visible
+            if (data.startsWith("message ")) {
+                const popup = document.getElementById('message_popup');
+                if (!popup.classList.contains('active')) {
+                    return; // Ignore message if popup not visible
+                }
+
+                const content = data.substring(8); // Remove "message "
+
+                // Check for --key flag
+                const hasKey = content.includes('--key');
+                let messageKey = null;
+                let remainingContent = content;
+
+                if (hasKey) {
+                    const keyMatch = content.match(/--key\s+(\S+)/);
+                    if (keyMatch) {
+                        messageKey = keyMatch[1];
+                        remainingContent = content.replace(/--key\s+\S+\s*/, '');
+                    }
+                }
+
+                // Parse quoted string first
+                let templateStr = "";
+                let argsObj = {};
+
+                if (remainingContent.startsWith('"')) {
+                    // Find the closing quote, handling escaped quotes
+                    let i = 1;
+                    let escaped = false;
+                    while (i < remainingContent.length) {
+                        if (remainingContent[i] === '\\' && !escaped) {
+                            escaped = true;
+                            i++;
+                            continue;
+                        }
+                        if (remainingContent[i] === '"' && !escaped) {
+                            templateStr = remainingContent.substring(1, i);
+                            // Get remaining arguments after the closing quote
+                            const argsStr = remainingContent.substring(i + 1).trim();
+                            if (argsStr) {
+                                // Parse key=value pairs
+                                const argPairs = argsStr.split(/\s+/);
+                                argPairs.forEach(pair => {
+                                    const eqIndex = pair.indexOf('=');
+                                    if (eqIndex > 0) {
+                                        const key = pair.substring(0, eqIndex);
+                                        const value = pair.substring(eqIndex + 1);
+                                        argsObj[key] = value;
+                                    }
+                                });
+                            }
+                            break;
+                        }
+                        escaped = false;
+                        i++;
+                    }
+                } else {
+                    // No quotes, treat everything as template
+                    templateStr = remainingContent;
+                }
+
+                // If --key is present and not English, lookup in popup translations
+                if (messageKey && currentLang !== 'en' && popupTranslations[messageKey]) {
+                    templateStr = popupTranslations[messageKey];
+                }
+
+                // Unescape any escaped quotes in the template
+                templateStr = templateStr.replace(/\\"/g, '"');
+
+                // Replace placeholders with arguments by ID
+                let message = templateStr;
+                message = message.replace(/\{([^}]+)\}/g, (match, id) => {
+                    // Remove any whitespace from the ID
+                    const cleanId = id.trim();
+                    if (argsObj.hasOwnProperty(cleanId)) {
+                        return argsObj[cleanId];
+                    }
+                    // Keep placeholder if arg not found
+                    return match;
+                });
+
+                document.getElementById('message_text').textContent = message;
+                return;
+            }
+
+            // Handle new image event
+            if (data === "new image") {
+                updateImageValidity();
+                return;
+            }
+        };
+
+        function showMessagePopup(timeInSec, indeterminate = false) {
+            const popup = document.getElementById('message_popup');
+            const button = document.getElementById('popup_button');
+            const spinner = document.getElementById('popup_spinner');
+
+            popup.classList.add('active');
+            isPopupIndeterminate = indeterminate;
+
+            // Set default message
+            const defaultMsg = translations['please_wait'] || 'Please wait...';
+            document.getElementById('message_text').textContent = defaultMsg;
+
+            // Show spinner or button based on indeterminate flag
+            if (indeterminate) {
+                button.style.display = 'none';
+                spinner.style.display = 'block';
+                // Still allow clicking outside, but with confirmation
+                popup.onclick = (e) => closeMessagePopup(e);
+            } else {
+                button.style.display = 'inline-block';
+                spinner.style.display = 'none';
+                // Allow clicking outside to close
+                popup.onclick = (e) => closeMessagePopup(e);
+            }
+
+            // Clear any existing timer
+            if (popupTimer) {
+                clearTimeout(popupTimer);
+                popupTimer = null;
+            }
+
+            // Set timer if not indefinite (0) and not indeterminate
+            if (timeInSec > 0 && !indeterminate) {
+                popupTimer = setTimeout(() => {
+                    closeMessagePopup();
+                }, timeInSec * 1000);
+            }
+        }
+
+        function closeMessagePopup(event) {
+            // If event exists and clicked on overlay (not content), close
+            if (event && event.target.classList.contains('message-popup-content')) {
+                return;
+            }
+
+            // Show confirm dialog if indeterminate
+            if (isPopupIndeterminate) {
+                const confirmMsg = translations['confirm_cancel'] || 'Are you sure you want to cancel this operation?';
+                if (!confirm(confirmMsg)) {
+                    return;
+                }
+            }
+
+            const popup = document.getElementById('message_popup');
+            popup.classList.remove('active');
+
+            if (popupTimer) {
+                clearTimeout(popupTimer);
+                popupTimer = null;
+            }
+
+            isPopupIndeterminate = false;
+
+            // Re-enable click outside to close
+            popup.onclick = (e) => closeMessagePopup(e);
+        }
+
+        // Initialize authentication check
+        checkAuth();
+
+        // Load initial image for everyone
+        updateImageValidity();
+
+        // Initialize languages
+        initializeLanguages();
+        </script>
+    </body>
+</html>
